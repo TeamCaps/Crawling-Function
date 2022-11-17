@@ -12,7 +12,7 @@ com_logo_list = []
 com_name_list = []
 work_link_list = []
 work_name_list = []
-workname = '서버개발'
+workname = '서버개발'           //찾고싶은 업무
 work = workname + ' 채용'
 
 
@@ -26,19 +26,19 @@ inputid.submit()
 clickwork = driver.find_element(By.CLASS_NAME, 'iI6nue.ieGFJe')
 clickwork.click()
 
-com_logos = driver.find_elements(By.CLASS_NAME, 'YQ4gaf.zr758c')
+com_logos = driver.find_elements(By.CLASS_NAME, 'YQ4gaf.zr758c')    //로고 크롤링
 for com_logo in com_logos[:5]:
     com_logo_list.append(com_logo.get_attribute('src'))
 
-work_links = driver.find_elements(By.CLASS_NAME, 'pMhGee.Co68jc.j0vryd')
+work_links = driver.find_elements(By.CLASS_NAME, 'pMhGee.Co68jc.j0vryd')        //채용링크 크롤링
 for work_link in work_links[:5]:
     work_link_list.append((work_link.get_attribute('href')))
 
-com_names = driver.find_elements(By.CLASS_NAME, 'vNEEBe')
+com_names = driver.find_elements(By.CLASS_NAME, 'vNEEBe')       //기업 이름 크롤링
 for com_name in com_names[:5]:
     com_name_list.append(com_name.text)
 
-work_names = driver.find_elements(By.CLASS_NAME, 'BjJfJf.PUpOsf')
+work_names = driver.find_elements(By.CLASS_NAME, 'BjJfJf.PUpOsf')       //업무 이름 크롤링
 for work_name in work_names[:5]:
     work_name_list.append(work_name.text)
 
