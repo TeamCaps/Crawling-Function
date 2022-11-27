@@ -11,8 +11,8 @@ cur.execute('use caps')
 #sql = 'INSERT INTO jobs ' #(cp_name, work_link, cp_logo, work_name, skill, intro_work, prefer, Num) VALUES (%s, %s, %s, %s, %s, %s, %s, %d)'
 
 options = webdriver.ChromeOptions()
-options.add_argument('--blink-settings=imagesEnabled=false')
-options.add_argument('disable-gpu')
+# options.add_argument('--blink-settings=imagesEnabled=false')
+# options.add_argument('disable-gpu')
 
 driver = webdriver.Chrome('chromedriver', options=options)
 driver.minimize_window()
@@ -24,9 +24,10 @@ cp_logo_list = []
 skill_list = []
 intro_work_list = []
 prefer_list = []
-i = 0
+summary_list = []
 
-driver.implicitly_wait(2)
+
+driver.implicitly_wait(1)
 
 main_address = 'https://career.programmers.co.kr/job?page=1&order=recent' #1 2 4 5 11 12 16 22
 driver.get(main_address)
@@ -54,6 +55,14 @@ for work in works:
         try:
             llll = driver.find_element(By.CSS_SELECTOR, 'body > div.main > div > div.container.container-position-show > div > div.content-body.col-item.col-xs-12.col-sm-12.col-md-12.col-lg-8')
 
+            sumas = llll.find_elements(By.CSS_SELECTOR, 'section.section-summary > table > tbody > tr')
+            lns = ''
+            for suma in sumas:
+                ln = suma.find_element(By.CSS_SELECTOR, 'td.t-label').text + ' : ' + suma.find_element(By.CSS_SELECTOR, 'td.t-content').text
+                lns = lns + '\n' + ln
+
+            summary_list.append(lns)
+
             try:
                 skill_list.append(llll.find_element(By.CSS_SELECTOR, 'section.section-stacks > ul').text)
             except NoSuchElementException:
@@ -79,12 +88,12 @@ for work in works:
 
 
     work.find_element(By.CSS_SELECTOR, 'label > input[type=checkbox]').click()
-    time.sleep(1)
+    time.sleep(0.5)
 
 
 
-for i in range(len(work_name_list)):
-    cur.execute('INSERT INTO jobs (cp_name, work_link, cp_logo, work_name, skill, intro_work, prefer, Num) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)', (cp_name_list[i], work_link_list[i], cp_logo_list[i], work_name_list[i], skill_list[i], intro_work_list[i], prefer_list[i], i + 1))
+for i in range(len(summary_list)):
+    cur.execute('INSERT INTO jobs (cp_name, work_link, cp_logo, work_name, skill, intro_work, prefer, Num, cp_preview) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)', (cp_name_list[i], work_link_list[i], cp_logo_list[i], work_name_list[i], skill_list[i], intro_work_list[i], prefer_list[i], i + 1, summary_list[i]))
     conn.commit()
 
 
@@ -92,5 +101,4 @@ for i in range(len(work_name_list)):
 conn.close()
 
 print("complete")
-
 
